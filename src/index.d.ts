@@ -1,4 +1,6 @@
 import { Config, EasingDictionary, createBezier } from "./constants";
+export type { AnimationConfigs } from "./types/common";
+export type { ControllerProperties } from "./Controller";
 
 export const configs: Config;
 export const createBezier: createBezier;
