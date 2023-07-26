@@ -1,4 +1,5 @@
 --!optimize 2
+local _ = _G[script]
 local constants = require(script.constants)
 
 local RoactSpring = {
