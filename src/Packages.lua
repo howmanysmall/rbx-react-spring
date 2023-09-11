@@ -6,9 +6,24 @@ local TS = (function()
 	if type(UsingGlobal) == "table" and type(UsingGlobal.import) == "function" then
 		return UsingGlobal
 	else
-		local rbxts_include = ReplicatedStorage:FindFirstChild("rbxts_include")
-			or script.Parent.Parent.Parent:FindFirstChild("include")
+		local function FindInclude(Root: Instance)
+			local Parent = Root
+			local Include = Parent:FindFirstChild("include")
+			if not Include then
+				while not Include do
+					Parent = Parent.Parent
+					if not Parent then
+						return nil
+					end
 
+					Include = Parent:FindFirstChild("include")
+				end
+			end
+
+			return Include
+		end
+
+		local rbxts_include = FindInclude(script) or ReplicatedStorage:FindFirstChild("rbxts_include")
 		assert(rbxts_include, "Missing rbxts_include?")
 		return require(rbxts_include.RuntimeLib)
 	end
