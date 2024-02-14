@@ -15,7 +15,6 @@
 		"roblox-ts",
 		"prettier",
 		"react-hooks",
-		"react-refresh",
 		"unicorn"
 	],
 	"extends": [

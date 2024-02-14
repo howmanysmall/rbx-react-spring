@@ -1,0 +1,63 @@
+{
+	"folders": [
+		{
+			"path": ".",
+		},
+	],
+
+	"settings": {
+		"editor.fontFamily": "'Cascadia Code', 'JetBrains Mono', \"Ligalex Mono\", Consolas, 'Courier New', monospace",
+		"editor.fontLigatures": "'ss02', 'zero'",
+		"files.defaultLanguage": "typescript",
+		"github.copilot.advanced": {
+			"inlineSuggestCount": 20,
+			"length": 500,
+			"listCount": 10,
+		},
+
+		"luau-lsp.require.mode": "relativeToFile",
+		"luau-lsp.types.definitionFiles": [],
+		"luau-lsp.require.directoryAliases": {
+			"@lune/": "~/.lune/.typedefs/0.8.0/",
+		},
+
+		"roblox-ts.colorPicker.enabled": true,
+		"roblox-ts.command.parameters": [
+			"-w",
+			"--optimizedLoops",
+		],
+
+		"typescript.inlayHints.enumMemberValues.enabled": true,
+		"typescript.tsdk": "node_modules/typescript/lib",
+		"emmet.excludeLanguages": [
+			"markdown",
+			"typescript",
+			"lua",
+			"luau",
+			"typescriptreact",
+		],
+
+		"vscord.enabled": false,
+		"roblox-ts.boundary.mode": "remove",
+	},
+
+	"extensions": {
+		"recommendations": [
+			"biomejs.biome",
+			"dbaeumer.vscode-eslint",
+			"mikestead.dotenv",
+			"visualstudioexptteam.vscodeintellicode",
+			"ghmcadams.lintlens",
+			"idered.npm",
+			"yoavbls.pretty-ts-errors",
+			"roblox-ts.vscode-roblox-ts",
+			"mattpocock.ts-error-translator",
+			"johnnymorganz.luau-lsp",
+			"codeque.codeque",
+			"kampfkarren.roblox-lua-autofills",
+			"kampfkarren.selene-vscode",
+			"pflannery.vscode-versionlens",
+			"softwaredotcom.swdc-vscode",
+		],
+	},
+}
