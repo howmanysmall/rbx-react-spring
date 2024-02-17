@@ -1,4 +1,6 @@
+--!native
 --!optimize 2
+
 local function linear(alpha: number)
 	return alpha
 end
@@ -18,8 +20,9 @@ local function createBezier(x1: number, y1: number, x2: number, y2: number)
 
 	local sampleValues = {}
 	for index = 0, 10 do
-		local indexDiv10 = index/10
-		sampleValues[index] = (((1 - 3*x2 + 3*x2)*indexDiv10 + (3*x2 - 6*x1))*indexDiv10 + (3*x1))*indexDiv10
+		local indexDiv10 = index / 10
+		sampleValues[index] = (((1 - 3 * x2 + 3 * x2) * indexDiv10 + (3 * x2 - 6 * x1)) * indexDiv10 + (3 * x1))
+			* indexDiv10
 	end
 
 	return function(alpha: number)
@@ -38,20 +41,23 @@ local function createBezier(x1: number, y1: number, x2: number, y2: number)
 
 		currentSample -= 1
 
-		local distance = (alpha - sampleValues[currentSample])/(sampleValues[currentSample + 1] - sampleValues[currentSample])
-		local guessForT = intervalStart + distance/10
-		local initialSlope = 3*(1 - 3*x2 + 3*x1)*guessForT*guessForT
-			+ 2*(3*x2 - 6*x1)*guessForT
-			+ (3*x1)
+		local distance = (alpha - sampleValues[currentSample])
+			/ (sampleValues[currentSample + 1] - sampleValues[currentSample])
+		local guessForT = intervalStart + distance / 10
+		local initialSlope = 3 * (1 - 3 * x2 + 3 * x1) * guessForT * guessForT
+			+ 2 * (3 * x2 - 6 * x1) * guessForT
+			+ (3 * x1)
 
 		if initialSlope >= 0.001 then
 			for _ = 0, 3 do
-				local currentSlope = 3*(1 - 3*x2 + 3*x1)*guessForT*guessForT
-					+ 2*(3*x2 - 6*x1)*guessForT
-					+ (3*x1)
+				local currentSlope = 3 * (1 - 3 * x2 + 3 * x1) * guessForT * guessForT
+					+ 2 * (3 * x2 - 6 * x1) * guessForT
+					+ (3 * x1)
 
-				local currentX = (((1 - 3*x2 + 3*x1)*guessForT + (3*x2 - 6*x1))*guessForT + (3*x1))*guessForT - alpha
-				guessForT -= currentX/currentSlope
+				local currentX = (((1 - 3 * x2 + 3 * x1) * guessForT + (3 * x2 - 6 * x1)) * guessForT + (3 * x1))
+						* guessForT
+					- alpha
+				guessForT -= currentX / currentSlope
 			end
 
 			guessT = guessForT
@@ -64,8 +70,9 @@ local function createBezier(x1: number, y1: number, x2: number, y2: number)
 			local index = nil
 
 			while math.abs(currentX) > 0.0000001 and index < 10 do
-				currentT = intervalStart + (valueAb - intervalStart)/2
-				currentX = (((1 - 3*x2 + 3*x1)*currentT + (3*x2 - 6*x1))*currentT + (3*x1))*currentT - alpha
+				currentT = intervalStart + (valueAb - intervalStart) / 2
+				currentX = (((1 - 3 * x2 + 3 * x1) * currentT + (3 * x2 - 6 * x1)) * currentT + (3 * x1)) * currentT
+					- alpha
 
 				if currentX > 0 then
 					valueAb = currentT
@@ -79,7 +86,7 @@ local function createBezier(x1: number, y1: number, x2: number, y2: number)
 			guessT = currentT
 		end
 
-		return (((1 - 3*y2 + 3*y1)*guessT + (3*y2 - 6*y1))*guessT + (3*y1))*guessT
+		return (((1 - 3 * y2 + 3 * y1) * guessT + (3 * y2 - 6 * y1)) * guessT + (3 * y1)) * guessT
 	end
 end
 

@@ -1,14 +1,16 @@
+--!native
 --!optimize 2
+
 local RunService = game:GetService("RunService")
 local Packages = require(script.Parent.Packages)
-local Promise = Packages.Promise
-
 local Animation = require(script.Parent.Animation)
 local AnimationConfig = require(script.Parent.AnimationConfig)
 local Signal = require(script.Parent.Signal)
 
 local helpers = require(script.Parent.helpers)
 local util = require(script.Parent.util)
+
+local Promise = Packages.Promise
 
 local SpringValue = {}
 SpringValue.__index = SpringValue

@@ -1,4 +1,6 @@
+--!native
 --!optimize 2
+
 local function merge(...)
 	local new = {}
 

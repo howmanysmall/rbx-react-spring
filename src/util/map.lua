@@ -1,4 +1,6 @@
+--!native
 --!optimize 2
+
 local function map(dictionary, fn)
 	local new = {}
 

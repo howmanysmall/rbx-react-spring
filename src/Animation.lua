@@ -1,4 +1,6 @@
+--!native
 --!optimize 2
+
 local AnimationConfig = require(script.Parent.AnimationConfig)
 local helpers = require(script.Parent.helpers)
 
@@ -37,7 +39,7 @@ function Animation.new(props, key: string)
 
 		v0 = table.create(length, nil);
 		lastPosition = helpers.getValuesFromType(if props.from then props.from[key] else props.to[key]);
-		lastVelocity = table.create(length, nil);
+		lastVelocity = table.create(length);
 		done = table.create(length, false);
 		elapsedTime = table.create(length, 0);
 		durationProgress = table.create(length, 0);

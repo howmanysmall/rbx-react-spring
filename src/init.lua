@@ -1,8 +1,9 @@
+--!native
 --!optimize 2
-local _ = _G[script]
+
 local constants = require(script.constants)
 
-local RoactSpring = {
+local ReactSpring = {
 	useSpring = require(script.hooks.useSpring);
 	useSprings = require(script.hooks.useSprings);
 	useTrail = require(script.hooks.useTrail);
@@ -14,4 +15,4 @@ local RoactSpring = {
 	easings = constants.easings;
 }
 
-return RoactSpring
+return table.freeze(ReactSpring)

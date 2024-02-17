@@ -1,3 +1,4 @@
+--!native
 --!optimize 2
 local useSprings = require(script.Parent.useSprings)
 

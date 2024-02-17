@@ -1,3 +1,4 @@
+--!native
 --!optimize 2
 local util = require(script.Parent.util)
 local getValuesFromType = require(script.Parent.utility.getValuesFromType)

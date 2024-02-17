@@ -1,3 +1,4 @@
+--!native
 --!optimize 2
 local constants = require(script.Parent.constants)
 local util = require(script.Parent.util)

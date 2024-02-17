@@ -1,8 +1,9 @@
+--!native
 --!optimize 2
 local Packages = require(script.Parent.Parent.Packages)
-local React = Packages.React
 local useSprings = require(script.Parent.useSprings)
 local util = require(script.Parent.Parent.util)
+local React = Packages.React
 
 local function useTrail(length: number, propsArg, deps: {any}?)
 	local isFn = type(propsArg) == "function"

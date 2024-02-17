@@ -1,3 +1,4 @@
+--!native
 --!optimize 2
 local Oklab = require(script.Parent.Oklab)
 

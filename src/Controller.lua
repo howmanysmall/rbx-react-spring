@@ -1,13 +1,14 @@
+--!native
 --!optimize 2
 local Packages = require(script.Parent.Packages)
-local Promise = Packages.Promise
-local Roact = Packages.React
-
 local AnimationConfig = require(script.Parent.AnimationConfig)
 local SpringValue = require(script.Parent.SpringValue)
 
 local helpers = require(script.Parent.helpers)
 local util = require(script.Parent.util)
+
+local Promise = Packages.Promise
+local React = Packages.React
 
 local Controller = {}
 Controller.__index = Controller
@@ -24,7 +25,7 @@ export type ControllerProps = {
 }
 
 function Controller.new(props: ControllerProps)
-	assert(Roact, "Roact not found. It must be placed in the same folder as roact-spring.")
+	assert(React, "Roact not found. It must be placed in the same folder as roact-spring.")
 	assert(type(props) == "table", "Props are required.")
 
 	local self = setmetatable({
@@ -40,7 +41,7 @@ end
 
 local function createSpring(props, key: string)
 	local spring = SpringValue.new(props, key)
-	local binding, setBinding = Roact.createBinding()
+	local binding, setBinding = React.createBinding()
 	spring.key = key
 	spring.onChange = function(newValue)
 		setBinding(newValue)

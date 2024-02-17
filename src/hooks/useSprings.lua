@@ -1,10 +1,11 @@
+--!native
 --!optimize 2
 local Packages = require(script.Parent.Parent.Packages)
-local Promise = Packages.Promise
-local React = Packages.React
-
 local Controller = require(script.Parent.Parent.Controller)
 local util = require(script.Parent.Parent.util)
+
+local Promise = Packages.Promise
+local React = Packages.React
 
 local function useSprings(length: number, props: {any} | (index: number) -> {[string]: any}, deps: {any}?)
 	local isImperative = React.useRef(nil)
