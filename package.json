@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/rbx-react-spring",
-	"version": "1.2.1-react.0",
+	"version": "1.2.1-react.1",
 	"description": "",
 	"main": "out/init.lua",
 	"scripts": {
@@ -33,6 +33,6 @@
 		"typescript": "^5.1.6"
 	},
 	"dependencies": {
-		"@rbxts/react": "^0.3.1"
+		"@rbxts/react": "*"
 	}
 }
