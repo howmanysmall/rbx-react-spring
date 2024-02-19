@@ -116,7 +116,7 @@
   resolved "https://registry.yarnpkg.com/@rbxts/react-vendor/-/react-vendor-0.3.1.tgz#de3cd8274320b23e74aaa949dcf010debdc5d681"
   integrity sha512-5oYc5SkvNCkOrD6uqVoqVmjlR2FgCPlhHasqgPEHbE0qurrCDF8PKvVT9r0gi8VFHLVSp9Hj9BG2WNifDt6Yew==
 
-"@rbxts/react@^0.3.1":
+"@rbxts/react@*":
   version "0.3.1"
   resolved "https://registry.yarnpkg.com/@rbxts/react/-/react-0.3.1.tgz#c5ce534bcce2516b0583983ec68bf40b6ed27dff"
   integrity sha512-J+PhKiDABBMC+hrOvqDiOSS6GhWqulizl9tSRG8ezZxNYsuoMGnShJvhDounPyTGl0ikjy3l2BRIKqy+xregzA==
