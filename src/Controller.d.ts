@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/filename-case */
-import { Binding } from "@rbxts/roact";
+import { Binding } from "@rbxts/react";
 import { AnimationProperties, AnimationStyle, SharedAnimationProperties } from "./types/common";
 
 export type ControllerProperties<T extends AnimationStyle> = (AnimationProperties<T> | T) & SharedAnimationProperties;

@@ -1,5 +1,5 @@
 /* eslint-disable unicorn/filename-case */
-import { Binding } from "@rbxts/roact";
+import { Binding } from "@rbxts/react";
 import { AnimationStyle } from "../types/common";
 import { ControllerProperties } from "../Controller";
 import { UseSpringsApi } from "./useSprings";

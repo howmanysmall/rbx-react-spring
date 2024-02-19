@@ -1,6 +1,6 @@
 /* eslint-disable unicorn/filename-case */
 import { AnimationStyle } from "../types/common";
-import { Binding } from "@rbxts/roact";
+import { Binding } from "@rbxts/react";
 import { ControllerApi, ControllerProperties } from "../Controller";
 
 declare interface UseSpring {
