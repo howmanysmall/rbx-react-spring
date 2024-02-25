@@ -111,18 +111,6 @@
   resolved "https://registry.yarnpkg.com/@rbxts/compiler-types/-/compiler-types-2.3.0-types.0.tgz#5a0762bcb367a026b2aac61572b2483fb5ec8035"
   integrity sha512-2kllUXLlK22OzSi3GmLT+/O70U9oB2iXp4rGFk5FLwc1pqf4W9EsInuJ0t7poLE2XnqnpW/ojff9CUNivI2+lw==
 
-"@rbxts/react-vendor@0.3.1":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@rbxts/react-vendor/-/react-vendor-0.3.1.tgz#de3cd8274320b23e74aaa949dcf010debdc5d681"
-  integrity sha512-5oYc5SkvNCkOrD6uqVoqVmjlR2FgCPlhHasqgPEHbE0qurrCDF8PKvVT9r0gi8VFHLVSp9Hj9BG2WNifDt6Yew==
-
-"@rbxts/react@*":
-  version "0.3.1"
-  resolved "https://registry.yarnpkg.com/@rbxts/react/-/react-0.3.1.tgz#c5ce534bcce2516b0583983ec68bf40b6ed27dff"
-  integrity sha512-J+PhKiDABBMC+hrOvqDiOSS6GhWqulizl9tSRG8ezZxNYsuoMGnShJvhDounPyTGl0ikjy3l2BRIKqy+xregzA==
-  dependencies:
-    "@rbxts/react-vendor" "0.3.1"
-
 "@rbxts/types@^1.0.752":
   version "1.0.754"
   resolved "https://registry.yarnpkg.com/@rbxts/types/-/types-1.0.754.tgz#4fb6995c1716e40da1622f92f075929c3af338a9"
@@ -174,7 +162,7 @@
   resolved "https://registry.yarnpkg.com/@types/mocha/-/mocha-10.0.6.tgz#818551d39113081048bdddbef96701b4e8bb9d1b"
   integrity sha512-dJvrYWxP/UcXm36Qn36fxhUKu8A/xMRXVT2cliFF1Z7UA9liG5Psj3ezNSZw+5puH2czDXRLcXQxf8JbJt0ejg==
 
-"@types/node@*", "@types/node@^20.11.17":
+"@types/node@*":
   version "20.11.19"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.19.tgz#b466de054e9cb5b3831bee38938de64ac7f81195"
   integrity sha512-7xMnVEcZFu0DikYjWOlRq7NTPETrm7teqUT2WkQjrTIkEgUyyGdWsj/Zg8bEJt5TNklzbPD1X3fqfsHw3SpapQ==
@@ -185,6 +173,13 @@
   version "16.18.82"
   resolved "https://registry.yarnpkg.com/@types/node/-/node-16.18.82.tgz#58d734b4acaa5be339864bbec9cd8024dd0b43d5"
   integrity sha512-pcDZtkx9z8XYV+ius2P3Ot2VVrcYOfXffBQUBuiszrlUzKSmoDYqo+mV+IoL8iIiIjjtOMvNSmH1hwJ+Q+f96Q==
+
+"@types/node@^20.11.20":
+  version "20.11.20"
+  resolved "https://registry.yarnpkg.com/@types/node/-/node-20.11.20.tgz#f0a2aee575215149a62784210ad88b3a34843659"
+  integrity sha512-7/rR21OS+fq8IyHTgtLkDK949uzsa6n8BkziAKtPVpugIkO6D+/ooXMvzXxDnZrmtXVfjb1bKQafYpb8s89LOg==
+  dependencies:
+    undici-types "~5.26.4"
 
 "@types/normalize-package-data@^2.4.0":
   version "2.4.4"
@@ -2044,17 +2039,17 @@ rimraf@^3.0.2:
   dependencies:
     glob "^7.1.3"
 
-roblox-ts@2.3.0-dev-eb0ff9c:
-  version "2.3.0-dev-eb0ff9c"
-  resolved "https://registry.yarnpkg.com/roblox-ts/-/roblox-ts-2.3.0-dev-eb0ff9c.tgz#a56bed7ab4497b196823c5254e62f34bed7ac60a"
-  integrity sha512-mwuAUvhSsUGN+T9BwvLIhUW/K37ciRxITilGrqN7TB9kgdYYIcE0kwQrkek8pn2kMwB4Zo8ClM6ian2b65dFHw==
+roblox-ts@next:
+  version "2.3.0-dev-ac7800f"
+  resolved "https://registry.yarnpkg.com/roblox-ts/-/roblox-ts-2.3.0-dev-ac7800f.tgz#bc33ea2fe3a13eace76cfa00a625649dac86e8a1"
+  integrity sha512-XZuBSgLoSMu11in/o5TUsaaHSj0LzTCrDyv6iFFXaoR3xY1AMl0XrUef7XPy+YN4LteX7VoDWV4dMitFP9KrrA==
   dependencies:
     "@roblox-ts/luau-ast" "^1.0.11"
     "@roblox-ts/path-translator" "^1.0.0"
     "@roblox-ts/rojo-resolver" "^1.0.6"
     "@types/fs-extra" "^11.0.4"
     "@types/mocha" "^10.0.6"
-    "@types/node" "^20.11.17"
+    "@types/node" "^20.11.20"
     "@types/prompts" "^2.4.9"
     "@types/resolve" "^1.20.6"
     "@types/ts-expose-internals" "npm:ts-expose-internals@=5.3.3"
