@@ -1,13 +1,14 @@
 --!native
 --!optimize 2
+
 local Oklab = require(script.Parent.Oklab)
 
 -- stylua: ignore
 type AnimationType =
-	number
 	| CFrame
 	| Color3
 	| DateTime
+	| number
 	| NumberRange
 	| NumberSequenceKeypoint
 	| PhysicalProperties

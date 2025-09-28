@@ -1,0 +1,38 @@
+base: roblox
+name: lune
+globals:
+  Color3.fromRGB:
+    args:
+      - required: false
+        type: number
+      - required: false
+        type: number
+      - required: false
+        type: number
+    must_use: true
+  # override Roblox require style with string requires
+  require:
+    args:
+      - type: string
+  vector.create:
+    args:
+      - type: number
+      - type: number
+      - required: false
+        type: number
+    must_use: true
+
+structs:
+  EnumItem:
+    FromName:
+      args:
+        - type: string
+      method: true
+    FromValue:
+      args:
+        - type: number
+      method: true
+    Name:
+      property: read-only
+    Value:
+      property: read-only

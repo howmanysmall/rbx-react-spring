@@ -1,0 +1,7 @@
+std = "lune"
+
+exclude = ["Vendor/Icon/*", ".lune/**", ".typedefs/**"]
+
+[config]
+# Allow for `_G.__DEV__` (etc) with packages like React-lua
+global_usage = { ignore_pattern = "^__|NOCOLOR|LUA_ENV|SYS_PATH_SEPARATOR" }

@@ -6,8 +6,51 @@
 	],
 
 	"settings": {
-		"editor.fontFamily": "'Cascadia Code', 'JetBrains Mono', \"Ligalex Mono\", Consolas, 'Courier New', monospace",
-		"editor.fontLigatures": "'ss02', 'zero'",
+		"[css]": {
+			"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+			"editor.formatOnSave": true,
+		},
+		"[github-actions-workflow]": {
+			"editor.defaultFormatter": "redhat.vscode-yaml",
+			"editor.formatOnSave": true,
+		},
+		"[gitignore]": {
+			"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+			"editor.formatOnSave": true,
+		},
+		"[json]": {
+			"editor.defaultFormatter": "biomejs.biome",
+			"editor.formatOnSave": true,
+			"editor.quickSuggestions": { "strings": true },
+			"editor.suggest.insertMode": "replace",
+		},
+		"[jsonc]": {
+			"editor.defaultFormatter": "biomejs.biome",
+			"editor.formatOnSave": true,
+			"editor.quickSuggestions": { "strings": true },
+			"editor.suggest.insertMode": "replace",
+		},
+		"[snippets]": {
+			"editor.defaultFormatter": "biomejs.biome",
+			"editor.formatOnSave": true,
+			"editor.quickSuggestions": { "strings": true },
+			"editor.suggest.insertMode": "replace",
+		},
+		"[typescript]": {
+			"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+			"editor.formatOnSave": true,
+		},
+		"[typescriptreact]": {
+			"editor.defaultFormatter": "dbaeumer.vscode-eslint",
+			"editor.formatOnSave": true,
+		},
+		"[yaml]": {
+			"editor.defaultFormatter": "redhat.vscode-yaml",
+			"editor.formatOnSave": true,
+		},
+
+		"cSpell.words": ["IHDR", "isdst", "Serializeable"],
+		"emmet.excludeLanguages": ["markdown", "typescript", "lua", "luau", "typescriptreact"],
 		"files.defaultLanguage": "typescript",
 		"github.copilot.advanced": {
 			"inlineSuggestCount": 20,
@@ -15,35 +58,28 @@
 			"listCount": 10,
 		},
 
-		"luau-lsp.require.mode": "relativeToFile",
-		"luau-lsp.types.definitionFiles": [],
-		"luau-lsp.require.directoryAliases": {
-			"@lune/": "~/.lune/.typedefs/0.8.0/",
-		},
-
+		"roblox-ts.boundary.mode": "remove",
 		"roblox-ts.colorPicker.enabled": true,
-		"roblox-ts.command.parameters": [
-			"-w",
-			"--optimizedLoops",
-		],
+		"roblox-ts.command.parameters": ["-w", "--optimizedLoops"],
 
 		"typescript.inlayHints.enumMemberValues.enabled": true,
+		"typescript.inlayHints.functionLikeReturnTypes.enabled": true,
+		"typescript.inlayHints.parameterTypes.enabled": true,
+		"typescript.suggest.autoImports": true,
 		"typescript.tsdk": "node_modules/typescript/lib",
-		"emmet.excludeLanguages": [
-			"markdown",
-			"typescript",
-			"lua",
-			"luau",
-			"typescriptreact",
-		],
+		"typescript.updateImportsOnFileMove.enabled": "always",
 
-		"vscord.enabled": false,
-		"roblox-ts.boundary.mode": "remove",
+		"terminal.integrated.enableFileLinks": "on",
+		"typescript.inlayHints.variableTypes.enabled": false,
+		"oxc.enable": false,
+		"typescript.preferences.autoImportSpecifierExcludeRegexes": ["^typescript$"],
+		"evenBetterToml.schema.enabled": true,
+		"biome.requireConfiguration": true,
 	},
 
 	"extensions": {
 		"recommendations": [
-			"biomejs.biome",
+			"dbaeumer.vscode-eslint",
 			"dbaeumer.vscode-eslint",
 			"mikestead.dotenv",
 			"visualstudioexptteam.vscodeintellicode",

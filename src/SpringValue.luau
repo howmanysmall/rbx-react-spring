@@ -2,15 +2,13 @@
 --!optimize 2
 
 local RunService = game:GetService("RunService")
-local Packages = require(script.Parent.Packages)
 local Animation = require(script.Parent.Animation)
 local AnimationConfig = require(script.Parent.AnimationConfig)
+local Promise = require(script.Parent.Promise)
 local Signal = require(script.Parent.Signal)
 
 local helpers = require(script.Parent.helpers)
 local util = require(script.Parent.util)
-
-local Promise = Packages.Promise
 
 local SpringValue = {}
 SpringValue.__index = SpringValue
@@ -234,7 +232,7 @@ function SpringValue:advance(dt: number)
 					end
 
 					if canBounce then
-						local isBouncing = position == to or position > to == isGrowing
+						local isBouncing = position == to or (position > to) == isGrowing
 
 						-- Invert the velocity with a magnitude, or clamp it
 						if isBouncing then

@@ -1,11 +1,10 @@
 --!native
 --!optimize 2
-local Packages = require(script.Parent.Parent.Packages)
+
+local Promise = require(script.Parent.Parent.Promise)
+local React = require(script.Parent.Parent.Parent.React)
 local Controller = require(script.Parent.Parent.Controller)
 local util = require(script.Parent.Parent.util)
-
-local Promise = Packages.Promise
-local React = Packages.React
 
 local function useSprings(length: number, props: {any} | (index: number) -> {[string]: any}, deps: {any}?)
 	local isImperative = React.useRef(nil)
@@ -35,7 +34,7 @@ local function useSprings(length: number, props: {any} | (index: number) -> {[st
 		if isImperative.current == false then
 			for i, spring in ctrls do
 				local startProps = util.merge(props[i], {
-					reset = if props[i].reset then props[i].reset else false;
+					reset = if props[i].reset then props[i].reset else false,
 				})
 
 				spring:start(util.merge({default = true}, startProps))

@@ -8,10 +8,10 @@ local Animation = {}
 Animation.__index = Animation
 
 type animationType =
-	number
 	| CFrame
 	| Color3
 	| DateTime
+	| number
 	| NumberRange
 	| NumberSequenceKeypoint
 	| PhysicalProperties

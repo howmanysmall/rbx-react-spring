@@ -1,5 +1,6 @@
 --!native
 --!optimize 2
+
 local createBezier = require(script.createBezier)
 local EasingFunctions = require(script.EasingFunctions)
 

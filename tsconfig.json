@@ -23,5 +23,7 @@
 		"incremental": true,
 		"tsBuildInfoFile": "out/tsconfig.tsbuildinfo",
 		"declaration": true
-	}
+	},
+	"include": ["src/**/*.ts", "src/**/*.tsx", "src/shared/modules/ecs/utility/topots"],
+	"exclude": ["node_modules/typescript", "bun/**", "do-not-sync-ever/**", "scripts/**"] 
 }

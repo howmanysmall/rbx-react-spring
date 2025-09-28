@@ -1,14 +1,12 @@
 --!native
 --!optimize 2
-local Packages = require(script.Parent.Packages)
+local React = require(script.Parent.Parent.React)
+local Promise = require(script.Parent.Promise)
 local AnimationConfig = require(script.Parent.AnimationConfig)
 local SpringValue = require(script.Parent.SpringValue)
 
 local helpers = require(script.Parent.helpers)
 local util = require(script.Parent.util)
-
-local Promise = Packages.Promise
-local React = Packages.React
 
 local Controller = {}
 Controller.__index = Controller
@@ -70,7 +68,7 @@ end
 
     Process a single set of props using the given controller.
 ]]
-local function flushUpdate(ctrl, props, isLoop: boolean?)
+local function flushUpdate(ctrl, props, _isLoop: boolean?)
 	-- Looping must be handled in this function, or else the values
 	-- would end up looping out-of-sync in many common cases.
 	local loop = props.loop
