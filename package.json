@@ -1,7 +1,7 @@
 {
 	"name": "@rbxts/react-spring",
-	"version": "2.0.0",
-	"description": "",
+	"version": "2.0.0-ts.0",
+	"description": "A modern spring-physics based animation library for React Luau inspired by react-spring",
 	"main": "src/init.luau",
 	"types": "src/index.d.ts",
 	"scripts": {
@@ -11,9 +11,10 @@
 		"prepublishOnly": "bun run build",
 		"watch": "rbxtsc -w"
 	},
-	"keywords": [],
-	"author": "",
-	"license": "ISC",
+	"keywords": ["roblox", "react", "react-luau", "react-spring", "spring", "animation", "ui", "ux", "hooks"],
+	"author": "chriscerie",
+	"contributors": ["HowManySmall"],
+	"license": "MIT",
 	"files": [
 		"!**/*.tsbuildinfo",
 		"src",

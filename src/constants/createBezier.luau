@@ -1,11 +1,11 @@
 --!native
 --!optimize 2
 
-local function linear(alpha: number)
+local function linear(alpha: number): number
 	return alpha
 end
 
-local function createBezier(x1: number, y1: number, x2: number, y2: number)
+local function createBezier(x1: number, y1: number, x2: number, y2: number): (alpha: number) -> number
 	if not (x1 and y1 and x2 and y2) then
 		error("Need 4 numbers to construct a Bezier curve", 0)
 	end
@@ -25,7 +25,7 @@ local function createBezier(x1: number, y1: number, x2: number, y2: number)
 			* indexDiv10
 	end
 
-	return function(alpha: number)
+	return function(alpha: number): number
 		if alpha == 0 or alpha == 1 then
 			return alpha
 		end

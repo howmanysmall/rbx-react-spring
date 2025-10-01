@@ -1,8 +1,8 @@
 --!native
 --!optimize 2
 
-local createBezier = require(script.createBezier)
 local EasingFunctions = require(script.EasingFunctions)
+local createBezier = require(script.createBezier)
 
 local Constants = {}
 Constants.createBezier = createBezier
@@ -47,5 +47,4 @@ Constants.config = {
 	};
 }
 
-table.freeze(Constants)
-return Constants
+return table.freeze(Constants)

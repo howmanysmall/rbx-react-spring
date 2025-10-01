@@ -22,20 +22,20 @@ export type SpringValueProps = {
 	onChange: nil | (position: number) -> (),
 }
 
-function SpringValue.new(props: SpringValueProps, key: string)
-	assert(props.from or props.to, "`to` or `from` expected, none passed.")
+function SpringValue.new(properties: SpringValueProps, key: string)
+	assert(properties.from or properties.to, "`to` or `from` expected, none passed.")
 
 	return setmetatable({
 		-- The animation state
-		animation = Animation.new(props, key);
+		animation = Animation.new(properties, key);
 
 		-- Some props have customizable default values
 		defaultProps = {
-			immediate = if props.immediate ~= nil then props.immediate else false;
-			config = props.config;
+			immediate = if properties.immediate ~= nil then properties.immediate else false;
+			config = properties.config;
 		};
 
-		onChange = props.onChange or function() end;
+		onChange = properties.onChange or function() end;
 		onComplete = Signal.new();
 
 		_memoizedDuration = 0;
@@ -45,26 +45,26 @@ function SpringValue.new(props: SpringValueProps, key: string)
 	}, SpringValue)
 end
 
-function SpringValue:start(props)
+function SpringValue:start(properties)
 	self.hasAnimated = true
-	return self:_update(props)
+	return self:_update(properties)
 end
 
-function SpringValue:_update(props)
-	if props.default then
-		self.defaultProps = util.merge(self.defaultProps, helpers.getDefaultProps(props))
+function SpringValue:_update(properties)
+	if properties.default then
+		self.defaultProps = util.merge(self.defaultProps, helpers.getDefaultProps(properties))
 	end
 
 	return Promise.new(function(resolve, _, onCancel)
-		if props.delay then
-			task.wait(props.delay)
+		if properties.delay then
+			task.wait(properties.delay)
 		end
 
 		if onCancel() then
 			return
 		end
 
-		local range = self:_prepareNode(props)
+		local range = self:_prepareNode(properties)
 		local from = range.from
 		local to = range.to
 
@@ -76,20 +76,22 @@ function SpringValue:_update(props)
 		local anim = self.animation
 		local defaultProps = self.defaultProps
 
-		anim:mergeProps(util.merge(defaultProps, props))
+		anim:mergeProps(util.merge(defaultProps, properties))
 
-		if props.reverse then
+		if properties.reverse then
 			anim.toValues, anim.fromValues = anim.fromValues, anim.toValues
 		end
 
-		self.onChange = props.onChange or self.onChange
+		self.onChange = properties.onChange or self.onChange
 
 		--[[
             When `reset` is undefined, the `from` prop implies `reset: true`,
             except for declarative updates. When `reset` is defined, there
             must exist a value to animate from.
         ]]
-		local reset = if props.reset == nil then props.from ~= nil else anim.fromValues ~= nil and props.reset
+		local reset = if properties.reset == nil
+			then properties.from ~= nil
+			else anim.fromValues ~= nil and properties.reset
 
 		if reset then
 			anim.values = table.clone(anim.fromValues)
@@ -124,7 +126,7 @@ function SpringValue:pause()
 	-- TODO: Pause delayed updates in time
 end
 
-function SpringValue:advance(dt: number)
+function SpringValue:advance(deltaTime: number)
 	local idle = true
 	local changed = false
 
@@ -151,7 +153,7 @@ function SpringValue:advance(dt: number)
 				continue
 			end
 
-			anim.elapsedTime[i] += dt
+			anim.elapsedTime[i] += deltaTime
 			local elapsed = anim.elapsedTime[i]
 
 			if anim.v0[i] == nil then
@@ -186,7 +188,7 @@ function SpringValue:advance(dt: number)
 							-- Set elapsed time to be the same percentage of progress as the previous duration
 							anim.elapsedTime[i] = config.duration * anim.durationProgress[i]
 							-- Add the delta so the below updates work as expected
-							anim.elapsedTime[i] += dt
+							anim.elapsedTime[i] += deltaTime
 							elapsed = anim.elapsedTime[i]
 						end
 					end
@@ -200,7 +202,7 @@ function SpringValue:advance(dt: number)
 				end
 
 				position = from + config.easing(p) * (to - from)
-				velocity = (position - anim.lastPosition[i]) / dt
+				velocity = (position - anim.lastPosition[i]) / deltaTime
 
 				finished = p == 1
 			else
@@ -220,7 +222,7 @@ function SpringValue:advance(dt: number)
 				-- When `true`, the value is increasing over time
 				local isGrowing = if from == to then _v0 > 0 else from < to
 
-				local numSteps = math.ceil(dt * 1000 / 2)
+				local numSteps = math.ceil(deltaTime * 1000 / 2)
 				for _ = 0, numSteps do
 					local isMoving = math.abs(velocity) > restVelocity
 
@@ -282,11 +284,11 @@ end
     This also ensures the initial value is available to animated components
     during the render phase.
 ]]
-function SpringValue:_prepareNode(props)
+function SpringValue:_prepareNode(properties)
 	local key = self.key or ""
 
-	local to = props.to
-	local from = props.from
+	local to = properties.to
+	local from = properties.from
 
 	if type(to) == "table" then
 		to = to[key]
@@ -302,7 +304,7 @@ function SpringValue:_prepareNode(props)
 	}
 
 	if not self.hasAnimated then
-		if props.reverse then
+		if properties.reverse then
 			to, from = from, to
 		end
 

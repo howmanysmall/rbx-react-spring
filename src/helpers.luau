@@ -1,9 +1,9 @@
 --!native
 --!optimize 2
 
-local util = require(script.Parent.util)
-local getValuesFromType = require(script.Parent.utility.getValuesFromType)
 local getTypeFromValues = require(script.Parent.utility.getTypeFromValues)
+local getValuesFromType = require(script.Parent.utility.getValuesFromType)
+local util = require(script.Parent.util)
 
 local helpers = {}
 helpers.getValuesFromType = getValuesFromType

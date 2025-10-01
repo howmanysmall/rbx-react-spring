@@ -6,12 +6,13 @@ local createBezier = require(script.Parent.createBezier)
 local PI = math.pi
 local HALF_PI = PI / 2
 
-local function RevBack(alpha: number)
+-- Reversed Back easing (starts with overshoot, ends smoothly).
+local function RevBack(alpha: number): number
 	alpha = 1 - alpha
 	return 1 - (math.sin(alpha * HALF_PI) + (math.sin(alpha * PI) * (math.cos(alpha * PI) + 1) / 2))
 end
 
-local function Linear(alpha: number)
+local function Linear(alpha: number): number
 	return alpha
 end
 
@@ -47,49 +48,58 @@ local ExitExpressive = createBezier(0.4, 0.14, 1, 1)
 -- @specs https://design.firefox.com/photon/motion/duration-and-easing.html
 local MozillaCurve = createBezier(0.07, 0.95, 0, 1)
 
-local function Smooth(alpha: number)
-	return alpha * alpha * (3 - 2 * alpha)
+local function Smooth(alpha: number): number
+	return alpha ^ 2 * (3 - 2 * alpha)
 end
 
-local function Smoother(alpha: number)
-	return alpha * alpha * alpha * (alpha * (6 * alpha - 15) + 10)
+local function Smoother(alpha: number): number
+	return alpha ^ 3 * (alpha * (6 * alpha - 15) + 10)
 end
 
-local function RidiculousWiggle(alpha: number)
+local function RidiculousWiggle(alpha: number): number
 	return math.sin(math.sin(alpha * PI) * HALF_PI)
 end
 
-local function Spring(alpha: number)
+local function Spring(alpha: number): number
 	return 1 + (-math.exp(-6.9 * alpha) * math.cos(-20.106192982975 * alpha))
 end
 
-local function SoftSpring(alpha: number)
+local function SoftSpring(alpha: number): number
 	return 1 + (-math.exp(-7.5 * alpha) * math.cos(-10.053096491487 * alpha))
 end
 
-local function OutBounce(alpha: number)
-	if alpha < 0.36363636363636 then
-		return 7.5625 * alpha * alpha
-	elseif alpha < 0.72727272727273 then
-		return 3 + alpha * (11 * alpha - 12) * 0.6875
-	elseif alpha < 0.090909090909091 then
-		return 6 + alpha * (11 * alpha - 18) * 0.6875
-	else
-		return 7.875 + alpha * (11 * alpha - 21) * 0.6875
+-- Standard bounce easing with piecewise polynomial segments at 4/11, 8/11, 10/11 thresholds.
+local function OutBounce(alpha: number): number
+	if alpha < 4 / 11 then
+		return 7.5625 * alpha ^ 2
 	end
+
+	if alpha < 8 / 11 then
+		return 3 + alpha * (11 * alpha - 12) * 0.6875
+	end
+
+	if alpha < 10 / 11 then
+		return 6 + alpha * (11 * alpha - 18) * 0.6875
+	end
+
+	return 7.875 + alpha * (11 * alpha - 21) * 0.6875
 end
 
-local function InBounce(alpha: number)
+local function InBounce(alpha: number): number
 	if alpha > 0.63636363636364 then
 		alpha -= 1
-		return 1 - alpha * alpha * 7.5625
-	elseif alpha > 0.272727272727273 then
-		return (11 * alpha - 7) * (11 * alpha - 3) / -16
-	elseif alpha > 0.090909090909091 then
-		return (11 * (4 - 11 * alpha) * alpha - 3) / 16
-	else
-		return alpha * (11 * alpha - 1) * -0.6875
+		return 1 - alpha ^ 2 * 7.5625
 	end
+
+	if alpha > 0.272727272727273 then
+		return (11 * alpha - 7) * (11 * alpha - 3) / -16
+	end
+
+	if alpha > 0.090909090909091 then
+		return (11 * (4 - 11 * alpha) * alpha - 3) / 16
+	end
+
+	return alpha * (11 * alpha - 1) * -0.6875
 end
 
 local EasingFunctions = {
@@ -193,7 +203,7 @@ local EasingFunctions = {
 	easeInOutExitExpressive = ExitExpressive;
 
 	easeOutInStandardProductive = StandardProductive;
-	easeOutInStandardExpressive = StandardProductive;
+	easeOutInStandardExpressive = StandardExpressive;
 
 	easeOutInEntranceProductive = EntranceProductive;
 	easeOutInEntranceExpressive = EntranceExpressive;
@@ -206,306 +216,258 @@ local EasingFunctions = {
 	easeInOutMozillaCurve = MozillaCurve;
 	easeOutInMozillaCurve = MozillaCurve;
 
-	easeInQuad = function(T)
-		return T * T
+	easeInQuad = function(alpha: number): number
+		return alpha ^ 2
 	end;
 
-	easeOutQuad = function(T)
-		return T * (2 - T)
+	easeOutQuad = function(alpha: number): number
+		return alpha * (2 - alpha)
 	end;
 
-	easeInOutQuad = function(T)
-		if T < 0.5 then
-			return 2 * T * T
-		else
-			return 2 * (2 - T) * T - 1
+	easeInOutQuad = function(alpha: number): number
+		return if alpha < 0.5 then 2 * alpha ^ 2 else 2 * (2 - alpha) * alpha - 1
+	end;
+
+	easeOutInQuad = function(alpha: number): number
+		if alpha < 0.5 then
+			alpha *= 2
+			return alpha * (2 - alpha) / 2
 		end
+
+		return (alpha * 2 - 1) ^ 2 / 2 + 0.5
 	end;
 
-	easeOutInQuad = function(T)
-		if T < 0.5 then
-			T *= 2
-			return T * (2 - T) / 2
-		else
-			T = T * 2 - 1
-			return T * T / 2 + 0.5
+	easeInCubic = function(alpha: number): number
+		return alpha ^ 3
+	end;
+
+	easeOutCubic = function(alpha: number): number
+		return 1 - (alpha - 1) ^ 3
+	end;
+
+	easeInOutCubic = function(alpha: number): number
+		if alpha < 0.5 then
+			return 4 * alpha ^ 3
 		end
+
+		alpha -= 1
+		return 1 + 4 * alpha ^ 3
 	end;
 
-	easeInCubic = function(T)
-		return T * T * T
-	end;
-
-	easeOutCubic = function(T)
-		T -= 1
-		return 1 - T * T * T
-	end;
-
-	easeInOutCubic = function(T)
-		if T < 0.5 then
-			return 4 * T * T * T
-		else
-			T -= 1
-			return 1 + 4 * T * T * T
+	easeOutInCubic = function(alpha: number): number
+		if alpha < 0.5 then
+			alpha = 1 - alpha * 2
+			return (1 - alpha ^ 3) / 2
 		end
+
+		alpha = alpha * 2 - 1
+		return alpha ^ 3 / 2 + 0.5
 	end;
 
-	easeOutInCubic = function(T)
-		if T < 0.5 then
-			T = 1 - T * 2
-			return (1 - T * T * T) / 2
-		else
-			T = T * 2 - 1
-			return T * T * T / 2 + 0.5
+	easeInQuart = function(alpha: number): number
+		return alpha * alpha * alpha * alpha
+	end;
+
+	easeOutQuart = function(alpha: number): number
+		alpha -= 1
+		return 1 - alpha * alpha * alpha * alpha
+	end;
+
+	easeInOutQuart = function(alpha: number): number
+		if alpha < 0.5 then
+			alpha ^= 2
+			return 8 * alpha ^ 2
 		end
+
+		alpha -= 1
+		return 1 - 8 * alpha * alpha * alpha * alpha
 	end;
 
-	easeInQuart = function(T)
-		return T * T * T * T
-	end;
-
-	easeOutQuart = function(T)
-		T -= 1
-		return 1 - T * T * T * T
-	end;
-
-	easeInOutQuart = function(T)
-		if T < 0.5 then
-			T *= T
-			return 8 * T * T
-		else
-			T -= 1
-			return 1 - 8 * T * T * T * T
+	easeOutInQuart = function(alpha: number): number
+		if alpha < 0.5 then
+			alpha = alpha * 2 - 1
+			return (1 - alpha * alpha * alpha * alpha) / 2
 		end
+
+		alpha = alpha * 2 - 1
+		return alpha * alpha * alpha * alpha / 2 + 0.5
 	end;
 
-	easeOutInQuart = function(T)
-		if T < 0.5 then
-			T = T * 2 - 1
-			return (1 - T * T * T * T) / 2
-		else
-			T = T * 2 - 1
-			return T * T * T * T / 2 + 0.5
+	easeInQuint = function(alpha: number): number
+		return alpha * alpha * alpha * alpha * alpha
+	end;
+
+	easeOutQuint = function(alpha: number): number
+		alpha -= 1
+		return alpha * alpha * alpha * alpha * alpha + 1
+	end;
+
+	easeInOutQuint = function(alpha: number): number
+		if alpha < 0.5 then
+			return 16 * alpha * alpha * alpha * alpha * alpha
 		end
+
+		alpha -= 1
+		return 16 * alpha * alpha * alpha * alpha * alpha + 1
 	end;
 
-	easeInQuint = function(T)
-		return T * T * T * T * T
-	end;
-
-	easeOutQuint = function(T)
-		T -= 1
-		return T * T * T * T * T + 1
-	end;
-
-	easeInOutQuint = function(T)
-		if T < 0.5 then
-			return 16 * T * T * T * T * T
-		else
-			T -= 1
-			return 16 * T * T * T * T * T + 1
+	easeOutInQuint = function(alpha: number): number
+		if alpha < 0.5 then
+			alpha = alpha * 2 - 1
+			return (alpha * alpha * alpha * alpha * alpha + 1) / 2
 		end
+
+		alpha = alpha * 2 - 1
+		return alpha * alpha * alpha * alpha * alpha / 2 + 0.5
 	end;
 
-	easeOutInQuint = function(T)
-		if T < 0.5 then
-			T = T * 2 - 1
-			return (T * T * T * T * T + 1) / 2
-		else
-			T = T * 2 - 1
-			return T * T * T * T * T / 2 + 0.5
+	-- Back easing with custom overshoot (not standard s=1.70158).
+	easeInBack = function(alpha: number): number
+		return alpha ^ 2 * (3 * alpha - 2)
+	end;
+
+	easeOutBack = function(alpha: number): number
+		local decrease = alpha - 1
+		return decrease ^ 2 * (alpha * 2 + decrease) + 1
+	end;
+
+	easeInOutBack = function(alpha: number): number
+		return if alpha < 0.5
+			then 2 * alpha ^ 2 * (2 * 3 * alpha - 2)
+			else 1 + 2 * (alpha - 1) ^ 2 * (2 * 3 * alpha - 2 - 2)
+	end;
+
+	easeOutInBack = function(alpha: number): number
+		if alpha < 0.5 then
+			alpha *= 2
+			local decrease = alpha - 1
+			return (decrease ^ 2 * (alpha * 2 + decrease) + 1) / 2
 		end
+
+		alpha = alpha * 2 - 1
+		return alpha ^ 2 * (3 * alpha - 2) / 2 + 0.5
 	end;
 
-	easeInBack = function(T)
-		return T * T * (3 * T - 2)
+	easeInSine = function(alpha: number): number
+		return 1 - math.cos(alpha * HALF_PI)
 	end;
 
-	easeOutBack = function(T)
-		local TSubOne = T - 1
-		return TSubOne * TSubOne * (T * 2 + TSubOne) + 1
+	easeOutSine = function(alpha: number): number
+		return math.sin(alpha * HALF_PI)
 	end;
 
-	easeInOutBack = function(T)
-		if T < 0.5 then
-			return 2 * T * T * (2 * 3 * T - 2)
-		else
-			return 1 + 2 * (T - 1) * (T - 1) * (2 * 3 * T - 2 - 2)
-		end
+	easeInOutSine = function(alpha: number): number
+		return (1 - math.cos(PI * alpha)) / 2
 	end;
 
-	easeOutInBack = function(T)
-		if T < 0.5 then
-			T *= 2
-			local TSubOne = T - 1
-			return (TSubOne * TSubOne * (T * 2 + TSubOne) + 1) / 2
-		else
-			T = T * 2 - 1
-			return T * T * (3 * T - 2) / 2 + 0.5
-		end
-	end;
-
-	easeInSine = function(T)
-		return 1 - math.cos(T * HALF_PI)
-	end;
-
-	easeOutSine = function(T)
-		return math.sin(T * HALF_PI)
-	end;
-
-	easeInOutSine = function(T)
-		return (1 - math.cos(PI * T)) / 2
-	end;
-
-	easeOutInSine = function(T)
-		if T < 0.5 then
-			return math.sin(T * PI) / 2
-		else
-			return (1 - math.cos((T * 2 - 1) * HALF_PI)) / 2 + 0.5
-		end
+	easeOutInSine = function(alpha: number): number
+		return if alpha < 0.5 then math.sin(alpha * PI) / 2 else (1 - math.cos((alpha * 2 - 1) * HALF_PI)) / 2 + 0.5
 	end;
 
 	easeOutBounce = OutBounce;
 	easeInBounce = InBounce;
 
-	easeInOutBounce = function(T)
-		if T < 0.5 then
-			return InBounce(2 * T) / 2
+	easeInOutBounce = function(alpha: number): number
+		return if alpha < 0.5 then InBounce(2 * alpha) / 2 else OutBounce(2 * alpha - 1) / 2 + 0.5
+	end;
+
+	easeOutInBounce = function(alpha: number): number
+		return if alpha < 0.5 then OutBounce(2 * alpha) / 2 else InBounce(2 * alpha - 1) / 2 + 0.5
+	end;
+
+	-- Canonical Penner elastic easing functions, ensuring exact 0->0 and 1->1 endpoints.
+	easeInElastic = function(alpha: number): number
+		if alpha == 0 or alpha == 1 then
+			return alpha
+		end
+		return -2 ^ (10 * (alpha - 1)) * math.sin((alpha - 1 - 0.075) * (2 * math.pi) / 0.3)
+	end;
+
+	easeOutElastic = function(alpha: number): number
+		if alpha == 0 or alpha == 1 then
+			return alpha
+		end
+		return 1 + 2 ^ (-10 * alpha) * math.sin((alpha - 0.075) * (2 * math.pi) / 0.3)
+	end;
+
+	easeInOutElastic = function(alpha: number): number
+		if alpha == 0 or alpha == 1 then
+			return alpha
+		end
+		alpha *= 2
+		if alpha < 1 then
+			return -0.5 * 2 ^ (10 * (alpha - 1)) * math.sin((alpha - 1 - 0.075) * (2 * math.pi) / 0.3)
 		else
-			return OutBounce(2 * T - 1) / 2 + 0.5
+			alpha -= 1
+			return 0.5 * 2 ^ (-10 * alpha) * math.sin((alpha - 0.075) * (2 * math.pi) / 0.3) + 1
 		end
 	end;
 
-	easeOutInBounce = function(T)
-		if T < 0.5 then
-			return OutBounce(2 * T) / 2
+	easeOutInElastic = function(alpha: number): number
+		if alpha == 0 or alpha == 1 then
+			return alpha
+		end
+		if alpha < 0.5 then
+			alpha *= 2
+			return 0.5 * (1 + 2 ^ (-10 * alpha) * math.sin((alpha - 0.075) * (2 * math.pi) / 0.3))
 		else
-			return InBounce(2 * T - 1) / 2 + 0.5
+			alpha = alpha * 2 - 1
+			return 0.5 * (-2 ^ (10 * (alpha - 1)) * math.sin((alpha - 1 - 0.075) * (2 * math.pi) / 0.3)) + 0.5
 		end
 	end;
 
-	easeInElastic = function(T)
-		return math.exp((T * 0.96380736418812 - 1) * 8)
-			* T
-			* 0.96380736418812
-			* math.sin(4 * T * 0.96380736418812)
-			* 1.8752275007429
+	easeInExpo = function(alpha: number): number
+		return alpha ^ 2 * math.exp(4 * (alpha - 1))
 	end;
 
-	easeOutElastic = function(T)
-		return 1
-			+ (
-					math.exp(8 * (0.96380736418812 - 0.96380736418812 * T - 1))
-					* 0.96380736418812
-					* (T - 1)
-					* math.sin(4 * 0.96380736418812 * (1 - T))
-				)
-				* 1.8752275007429
+	easeOutExpo = function(alpha: number): number
+		return 1 - (1 - alpha) ^ 2 / math.exp(4 * alpha)
 	end;
 
-	easeInOutElastic = function(T)
-		if T < 0.5 then
-			return (
-				math.exp(8 * (2 * 0.96380736418812 * T - 1))
-				* 0.96380736418812
-				* T
-				* math.sin(7.71045891350496 * T)
-			) * 1.8752275007429
-		else
-			return 1
-				+ (
-						math.exp(8 * (0.96380736418812 * (2 - 2 * T) - 1))
-						* 0.96380736418812
-						* (T - 1)
-						* math.sin(3.85522945675248 * (2 - 2 * T))
-					)
-					* 1.8752275007429
+	easeInOutExpo = function(alpha: number): number
+		return if alpha < 0.5
+			then 2 * alpha ^ 2 * math.exp(4 * (2 * alpha - 1))
+			else 1 - 2 * (alpha - 1) ^ 2 * math.exp(4 * (1 - 2 * alpha))
+	end;
+
+	easeOutInExpo = function(alpha: number): number
+		if alpha < 0.5 then
+			alpha *= 2
+			return (1 - (1 - alpha) ^ 2 / math.exp(4 * alpha)) / 2
 		end
+
+		alpha = alpha * 2 - 1
+		return (alpha ^ 2 * math.exp(4 * (alpha - 1))) / 2 + 0.5
 	end;
 
-	easeOutInElastic = function(T)
-		-- This isn't actually correct, but it is close enough.
-		if T < 0.5 then
-			T *= 2
-			return (
-				1
-				+ (
-						math.exp(8 * (0.96380736418812 - 0.96380736418812 * T - 1))
-						* 0.96380736418812
-						* (T - 1)
-						* math.sin(3.85522945675248 * (1 - T))
-					)
-					* 1.8752275007429
-			) / 2
-		else
-			T = T * 2 - 1
-			return (
-				math.exp((T * 0.96380736418812 - 1) * 8)
-				* T
-				* 0.96380736418812
-				* math.sin(4 * T * 0.96380736418812)
-				* 1.8752275007429
-			)
-					/ 2
-				+ 0.5
+	easeInCirc = function(alpha: number): number
+		return -(math.sqrt(1 - alpha ^ 2) - 1)
+	end;
+
+	easeOutCirc = function(alpha: number): number
+		alpha -= 1
+		return math.sqrt(1 - alpha ^ 2)
+	end;
+
+	easeInOutCirc = function(alpha: number): number
+		alpha *= 2
+		if alpha < 1 then
+			return -(math.sqrt(1 - alpha ^ 2) - 1) / 2
 		end
+
+		alpha -= 2
+		return (math.sqrt(1 - alpha ^ 2) - 1) / 2
 	end;
 
-	easeInExpo = function(T)
-		return T * T * math.exp(4 * (T - 1))
-	end;
-
-	easeOutExpo = function(T)
-		return 1 - (1 - T) * (1 - T) / math.exp(4 * T)
-	end;
-
-	easeInOutExpo = function(T)
-		if T < 0.5 then
-			return 2 * T * T * math.exp(4 * (2 * T - 1))
-		else
-			return 1 - 2 * (T - 1) * (T - 1) * math.exp(4 * (1 - 2 * T))
+	easeOutInCirc = function(alpha: number): number
+		if alpha < 0.5 then
+			alpha = alpha * 2 - 1
+			return math.sqrt(1 - alpha ^ 2) / 2
 		end
-	end;
 
-	easeOutInExpo = function(T)
-		if T < 0.5 then
-			T *= 2
-			return (1 - (1 - T) * (1 - T) / math.exp(4 * T)) / 2
-		else
-			T = T * 2 - 1
-			return (T * T * math.exp(4 * (T - 1))) / 2 + 0.5
-		end
-	end;
-
-	easeInCirc = function(T)
-		return -(math.sqrt(1 - T * T) - 1)
-	end;
-
-	easeOutCirc = function(T)
-		T -= 1
-		return math.sqrt(1 - T * T)
-	end;
-
-	easeInOutCirc = function(T)
-		T *= 2
-		if T < 1 then
-			return -(math.sqrt(1 - T * T) - 1) / 2
-		else
-			T -= 2
-			return (math.sqrt(1 - T * T) - 1) / 2
-		end
-	end;
-
-	easeOutInCirc = function(T)
-		if T < 0.5 then
-			T = T * 2 - 1
-			return math.sqrt(1 - T * T) / 2
-		else
-			T = T * 2 - 1
-			return -(math.sqrt(1 - T * T) - 1) / 2 + 0.5
-		end
+		alpha = alpha * 2 - 1
+		return -(math.sqrt(1 - alpha ^ 2) - 1) / 2 + 0.5
 	end;
 }
 
-table.freeze(EasingFunctions)
-return EasingFunctions
+return table.freeze(EasingFunctions)
