@@ -37,9 +37,9 @@ function Oklab.From(array: {number}, unclamped: boolean?): Color3
 	local rootM = x - y * 0.1055613458 - z * 0.0638541728
 	local rootS = x - y * 0.0894841775 - z * 1.2914855480
 
-	local l = rootL * rootL * rootL
-	local m = rootM * rootM * rootM
-	local s = rootS * rootS * rootS
+	local l = rootL ^ 3
+	local m = rootM ^ 3
+	local s = rootS ^ 3
 
 	local red = l * 4.0767416621 - m * 3.3077115913 + s * 0.2309699292
 	local green = l * -1.2684380046 + m * 2.6097574011 - s * 0.3413193965
@@ -54,5 +54,4 @@ function Oklab.From(array: {number}, unclamped: boolean?): Color3
 	return Color3.new(red, green, blue)
 end
 
-table.freeze(Oklab)
-return Oklab
+return table.freeze(Oklab)

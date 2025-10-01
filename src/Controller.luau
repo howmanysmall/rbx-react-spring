@@ -1,8 +1,8 @@
 --!native
 --!optimize 2
-local React = require(script.Parent.Parent.React)
-local Promise = require(script.Parent.Promise)
 local AnimationConfig = require(script.Parent.AnimationConfig)
+local Promise = require(script.Parent.Promise)
+local React = require(script.Parent.Parent.React)
 local SpringValue = require(script.Parent.SpringValue)
 
 local helpers = require(script.Parent.helpers)
@@ -27,9 +27,9 @@ function Controller.new(props: ControllerProps)
 	assert(type(props) == "table", "Props are required.")
 
 	local self = setmetatable({
-		bindings = {},
-		controls = {},
-		queue = {},
+		bindings = {};
+		controls = {};
+		queue = {};
 	}, Controller)
 
 	self:start(util.merge({default = true}, props))

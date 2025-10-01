@@ -313,7 +313,7 @@ declare namespace ReactSpring {
 	 * @see {@link https://www.chrisc.dev/roact-spring/docs/Common/configs | Configuration Guide}
 	 */
 	export interface SharedAnimationProperties {
-		readonly config?: AnimationConfigurations;
+		readonly config?: AnimationConfiguration;
 		readonly default?: boolean;
 		readonly delay?: number;
 		readonly immediate?: boolean;
@@ -371,7 +371,7 @@ declare namespace ReactSpring {
 	 *
 	 * @see {@link https://www.chrisc.dev/roact-spring/docs/Common/configs | Configuration Guide}
 	 */
-	export interface AnimationConfigurations {
+	export interface AnimationConfiguration {
 		/**
 		 * When above zero, the spring will bounce instead of overshooting when
 		 * exceeding its goal value. Its velocity is multiplied by `-1.
@@ -500,13 +500,13 @@ declare namespace ReactSpring {
 	 * @see {@link https://www.chrisc.dev/roact-spring/docs/Common/configs | Configuration Guide}
 	 */
 	export const config: {
-		readonly default: AnimationConfigurations;
-		readonly gentle: AnimationConfigurations;
-		readonly molasses: AnimationConfigurations;
-		readonly slow: AnimationConfigurations;
-		readonly snappy: AnimationConfigurations;
-		readonly stiff: AnimationConfigurations;
-		readonly wobbly: AnimationConfigurations;
+		readonly default: AnimationConfiguration;
+		readonly gentle: AnimationConfiguration;
+		readonly molasses: AnimationConfiguration;
+		readonly slow: AnimationConfiguration;
+		readonly snappy: AnimationConfiguration;
+		readonly stiff: AnimationConfiguration;
+		readonly wobbly: AnimationConfiguration;
 	};
 
 	/**

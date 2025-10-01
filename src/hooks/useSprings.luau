@@ -1,25 +1,25 @@
 --!native
 --!optimize 2
 
+local Controller = require(script.Parent.Parent.Controller)
 local Promise = require(script.Parent.Parent.Promise)
 local React = require(script.Parent.Parent.Parent.React)
-local Controller = require(script.Parent.Parent.Controller)
 local util = require(script.Parent.Parent.util)
 
-local function useSprings(length: number, props: {any} | (index: number) -> {[string]: any}, deps: {any}?)
+local function useSprings(length: number, properties: {any} | (index: number) -> {[string]: any}, dependencies: {any}?)
 	local isImperative = React.useRef(nil)
-	local ctrls = React.useRef({}).current
+	local controls = React.useRef({}).current
 	local stylesList = React.useRef({}).current
 	local apiList = React.useRef({}).current
 
-	if type(props) == "table" then
+	if type(properties) == "table" then
 		assert(
 			isImperative.current == nil or isImperative.current == false,
 			"useSprings detected a change from imperative to declarative. This is not supported."
 		)
 
 		isImperative.current = false
-	elseif type(props) == "function" then
+	elseif type(properties) == "function" then
 		assert(
 			isImperative.current == nil or isImperative.current == true,
 			"useSprings detected a change from declarative to imperative. This is not supported."
@@ -27,53 +27,56 @@ local function useSprings(length: number, props: {any} | (index: number) -> {[st
 
 		isImperative.current = true
 	else
-		error("Expected table or function for useSprings, got " .. typeof(props))
+		error("Expected table or function for useSprings, got " .. typeof(properties))
 	end
 
 	React.useEffect(function()
 		if isImperative.current == false then
-			for i, spring in ctrls do
-				local startProps = util.merge(props[i], {
-					reset = if props[i].reset then props[i].reset else false,
+			for key, spring in controls do
+				local startProperties = util.merge(properties[key], {
+					reset = if properties[key].reset then properties[key].reset else false,
 				})
 
-				spring:start(util.merge({default = true}, startProps))
+				spring:start(util.merge({default = true}, startProperties))
 			end
 		end
-	end, deps)
+	end, dependencies)
 
 	-- Create new controllers when "length" increases, and destroy
 	-- the affected controllers when "length" decreases
 	React.useMemo(function()
-		if length > #ctrls then
-			for i = #ctrls + 1, length do
-				local styles, api = Controller.new(if type(props) == "table" then props[i] else props(i))
-				ctrls[i] = api
-				stylesList[i] = styles
+		if length > #controls then
+			for index = #controls + 1, length do
+				local styles, api =
+					Controller.new(if type(properties) == "table" then properties[index] else properties(index))
+				controls[index] = api
+				stylesList[index] = styles
 			end
 		else
 			-- Clean up any unused controllers
-			for i = length + 1, #ctrls do
-				ctrls[i]:stop()
-				ctrls[i] = nil
-				stylesList[i] = nil
-				apiList[i] = nil
+			for index = length + 1, #controls do
+				controls[index]:stop()
+				controls[index] = nil
+				stylesList[index] = nil
+				apiList[index] = nil
 			end
 		end
 	end, {length})
 
 	React.useMemo(function()
 		if isImperative.current then
-			if #ctrls > 0 then
-				for apiName, value in getmetatable(ctrls[1]) do
+			if #controls > 0 then
+				for apiName, value in getmetatable(controls[1]) do
 					if type(value) == "function" and apiName ~= "new" then
-						apiList[apiName] = function(apiProps: (index: number) -> any | any)
-							local promises = {}
-							for i, spring in ctrls do
-								table.insert(promises, Promise.new(function(resolve)
+						apiList[apiName] = function(apiProperties: (index: number) -> any | any)
+							local promises = table.create(#controls)
+							for index, spring in controls do
+								promises[index] = Promise.new(function(resolve)
 									local result = spring[apiName](
 										spring,
-										if type(apiProps) == "function" then apiProps(i) else apiProps
+										if type(apiProperties) == "function"
+											then apiProperties(index)
+											else apiProperties
 									)
 
 									-- Some results might be promises
@@ -82,7 +85,7 @@ local function useSprings(length: number, props: {any} | (index: number) -> {[st
 									end
 
 									resolve()
-								end))
+								end)
 							end
 
 							return Promise.all(promises)
@@ -92,13 +95,13 @@ local function useSprings(length: number, props: {any} | (index: number) -> {[st
 			end
 		end
 		-- Need to pass {{}} because useMemo doesn't support nil dependency yet
-	end, deps or {{}})
+	end, dependencies or {{}})
 
 	-- Cancel the animations of all controllers on unmount
 	React.useEffect(function()
 		return function()
-			for _, ctrl in ctrls do
-				ctrl:stop()
+			for _, control in controls do
+				control:stop()
 			end
 		end
 	end, {})

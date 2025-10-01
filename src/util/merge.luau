@@ -5,7 +5,7 @@ local function merge(...)
 	local new = {}
 
 	for dictionaryIndex = 1, select("#", ...) do
-		local dictionary = select(dictionaryIndex, ...)
+		local dictionary = (select(dictionaryIndex, ...))
 
 		if dictionary ~= nil then
 			for key, value in dictionary do

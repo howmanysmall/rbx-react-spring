@@ -3,9 +3,13 @@
 
 local useSprings = require(script.Parent.useSprings)
 
-local function useSpring(props, deps: {any}?)
-	local isFn = type(props) == "function"
-	local styles, api = useSprings(1, if isFn then props else {props}, if isFn then deps or {} else deps)
+local function useSpring(properties, dependencies: {any}?)
+	local isFunction = type(properties) == "function"
+	local styles, api = useSprings(
+		1,
+		if isFunction then properties else {properties},
+		if isFunction then dependencies or {} else dependencies
+	)
 	return styles[1], api
 end
 
