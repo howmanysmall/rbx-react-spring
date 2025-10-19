@@ -1,9 +1,6 @@
-
 // @ts-check
 
 import style, { GLOB_MARKDOWN_CODE } from "@isentinel/eslint-config";
-
-import perfectionist from "eslint-plugin-perfectionist";
 
 export default style(
 	{
@@ -47,11 +44,9 @@ export default style(
 		perfectionist: {
 			customClassGroups: [],
 		},
-		plugins: {
-			perfectionist,
-		},
+		plugins: {},
 		pnpm: false,
-		react: false,
+		react: true,
 		roblox: true,
 		rules: {
 			// this is the worst lint config ever made lol

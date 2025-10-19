@@ -1,6 +1,6 @@
 {
 	"name": "@rbxts/react-spring",
-	"version": "2.0.0-ts.0",
+	"version": "2.0.0-ts.1",
 	"description": "A modern spring-physics based animation library for React Luau inspired by react-spring",
 	"main": "src/init.luau",
 	"types": "src/index.d.ts",

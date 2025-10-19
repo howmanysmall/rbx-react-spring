@@ -54,16 +54,8 @@ type ExtractStyle<P> = P extends { from?: infer F }
  * @see {@link https://www.chrisc.dev/roact-spring/docs/Hooks/useSpring | useSpring Guide}
  */
 interface UseSpring {
-	<P extends ReactSpring.ControllerProperties<AnimationStyle>>(
-		properties: EnforceProperties<P> & P,
-		dependencies?: ReadonlyArray<unknown>,
-	): { readonly [K in keyof ExtractStyle<P>]: Binding<ExtractStyle<P>[K]> };
-
 	<F extends () => ReactSpring.ControllerProperties<AnimationStyle>>(
-		properties: F & {
-			/** @deprecated */
-			__enforce?: EnforceProperties<ReturnType<F>>;
-		},
+		properties: F,
 		dependencies?: ReadonlyArray<unknown>,
 	): LuaTuple<
 		[
@@ -71,6 +63,11 @@ interface UseSpring {
 			ReactSpring.ControllerApi,
 		]
 	>;
+
+	<P extends ReactSpring.ControllerProperties<AnimationStyle>>(
+		properties: EnforceProperties<P> & P,
+		dependencies?: ReadonlyArray<unknown>,
+	): { readonly [K in keyof ExtractStyle<P>]: Binding<ExtractStyle<P>[K]> };
 }
 /**
  * Function signature interface for the useSprings hook with multiple overloads.
@@ -95,18 +92,9 @@ interface UseSpring {
  * @see {@link https://www.chrisc.dev/roact-spring/docs/Hooks/useSprings | useSprings Guide}
  */
 interface UseSprings {
-	<P extends ReactSpring.ControllerProperties<AnimationStyle>>(
-		length: number,
-		properties: ReadonlyArray<EnforceProperties<P> & P>,
-		dependencies?: ReadonlyArray<unknown>,
-	): ReadonlyArray<{ readonly [K in keyof ExtractStyle<P>]: Binding<ExtractStyle<P>[K]> }>;
-
 	<F extends (index: number) => ReactSpring.ControllerProperties<AnimationStyle>>(
 		length: number,
-		properties: F & {
-			/** @deprecated */
-			__enforce?: EnforceProperties<ReturnType<F>>;
-		},
+		properties: F,
 		dependencies?: ReadonlyArray<unknown>,
 	): LuaTuple<
 		[
@@ -116,6 +104,12 @@ interface UseSprings {
 			ReactSpring.UseSpringsApi<ExtractStyle<ReturnType<F>>>,
 		]
 	>;
+
+	<P extends ReactSpring.ControllerProperties<AnimationStyle>>(
+		length: number,
+		properties: ReadonlyArray<EnforceProperties<P> & P>,
+		dependencies?: ReadonlyArray<unknown>,
+	): ReadonlyArray<{ readonly [K in keyof ExtractStyle<P>]: Binding<ExtractStyle<P>[K]> }>;
 }
 
 /**
@@ -144,12 +138,6 @@ interface UseSprings {
  * @see {@link https://www.chrisc.dev/roact-spring/docs/Hooks/useTrail | useTrail Guide}
  */
 interface UseTrail {
-	<P extends ReactSpring.ControllerProperties<AnimationStyle>>(
-		length: number,
-		properties: ReadonlyArray<EnforceProperties<P> & P>,
-		dependencies?: ReadonlyArray<unknown>,
-	): ReadonlyArray<{ readonly [K in keyof ExtractStyle<P>]: Binding<ExtractStyle<P>[K]> }>;
-
 	/**
 	 * Creates a trailing animation using a property factory.
 	 *
@@ -160,10 +148,7 @@ interface UseTrail {
 	 */
 	<F extends (index: number) => ReactSpring.ControllerProperties<AnimationStyle>>(
 		length: number,
-		properties: F & {
-			/** @deprecated */
-			__enforce?: EnforceProperties<ReturnType<F>>;
-		},
+		properties: F,
 		dependencies?: ReadonlyArray<unknown>,
 	): LuaTuple<
 		[
@@ -173,6 +158,12 @@ interface UseTrail {
 			ReactSpring.UseSpringsApi<ExtractStyle<ReturnType<F>>>,
 		]
 	>;
+
+	<P extends ReactSpring.ControllerProperties<AnimationStyle>>(
+		length: number,
+		properties: ReadonlyArray<EnforceProperties<P> & P>,
+		dependencies?: ReadonlyArray<unknown>,
+	): ReadonlyArray<{ readonly [K in keyof ExtractStyle<P>]: Binding<ExtractStyle<P>[K]> }>;
 }
 
 declare namespace ReactSpring {
