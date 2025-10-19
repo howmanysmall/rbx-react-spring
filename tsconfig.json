@@ -24,6 +24,6 @@
 		"tsBuildInfoFile": "out/tsconfig.tsbuildinfo",
 		"declaration": true
 	},
-	"include": ["src/**/*.ts", "src/**/*.tsx", "src/shared/modules/ecs/utility/topots"],
+	"include": ["src/**/*.ts", "src/**/*.tsx"],
 	"exclude": ["node_modules/typescript", "bun/**", "do-not-sync-ever/**", "scripts/**"] 
 }
