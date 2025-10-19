@@ -1,11 +1,9 @@
-// @ts-check
-
-import style, { GLOB_MARKDOWN_CODE } from "@isentinel/eslint-config";
+import style, { GLOB_DTS, GLOB_MARKDOWN_CODE } from "@isentinel/eslint-config";
 
 export default style(
 	{
 		formatters: {
-			css: true,
+			css: false,
 			graphql: true,
 			html: true,
 			lua: false,
@@ -36,29 +34,45 @@ export default style(
 				vueIndentScriptAndStyle: false,
 			},
 		},
-		gitignore: true,
-		ignores: [".lune/**", "do-not-sync-ever/**", "./data/**", "**/node_modules/**", GLOB_MARKDOWN_CODE],
-		jsonc: true,
-		jsx: false,
+		ignores: ["do-not-sync-ever/**", "**/node_modules/**", GLOB_MARKDOWN_CODE],
+		jsdoc: {
+			full: true,
+		},
 		markdown: false,
 		perfectionist: {
-			customClassGroups: [],
+			sortObjects: {
+				customGroups: {
+					id: "^id$",
+					name: "^name$",
+					callbacks: ["\b(on[A-Z][a-zA-Z]*)\b"],
+					reactProps: ["^children$", "^ref$"],
+				},
+				groups: ["id", "name", "unknown", "reactProps"],
+			},
 		},
 		plugins: {},
 		pnpm: false,
 		react: true,
 		roblox: true,
 		rules: {
-			// this is the worst lint config ever made lol
 			"antfu/consistent-list-newline": "off",
-			// this is stupid? and standard?
-			"antfu/no-top-level-await": "off",
 			"arrow-style/arrow-return-style": "off",
-			"better-max-params/better-max-params": ["error", { func: 10 }],
-			"comment-length/limit-multi-line-comments": "error",
+			camelcase: [
+				"error",
+				{
+					ignoreImports: true,
+				},
+			],
+			"comment-length/limit-multi-line-comments": [
+				"error",
+				{
+					maxLength: 85,
+				},
+			],
 			"comment-length/limit-single-line-comments": "error",
 			"comment-length/limit-tagged-template-literal-comments": "error",
 			curly: "off",
+			"eslint-comments/require-description": "error",
 			"id-length": [
 				"error",
 				{
@@ -69,13 +83,14 @@ export default style(
 			"max-lines": [
 				"warn",
 				{
-					max: 10000,
+					max: 9000,
 				},
 			],
 			"max-lines-per-function": "off",
+			// worthless.
+			"new-cap": "off",
 			// makes shit less neat
 			"no-inline-comments": "off",
-			"no-restricted-syntax": "off",
 			// ...existing code...
 			"perfectionist/sort-classes": [
 				"warn",
@@ -116,25 +131,14 @@ export default style(
 					order: "asc",
 				},
 			],
-			"perfectionist/sort-objects": [
-				"warn",
+			"react-hooks-roblox/exhaustive-deps": [
+				"error",
 				{
-					customGroups: {
-						id: "^id$",
-						name: "^name$",
-						callbacks: ["\b(on[A-Z][a-zA-Z]*)\b"],
-						reactProps: ["^children$", "^ref$"],
-					},
-					groups: ["id", "name", "unknown", "reactProps"],
-					order: "asc",
-					partitionByComment: "^Part:\\*\\*(.*)$",
-					type: "natural",
+					enableDangerousAutofixThisMayCauseInfiniteLoops: false,
 				},
 			],
 			"roblox/no-user-defined-lua-tuple": "off",
-			// some things are just not correct in pascal case unfortunately
-			// "shopify/typescript-prefer-pascal-case-enums": "off",
-			// the most annoying thing known to man
+			"shopify/typescript-prefer-pascal-case-enums": "error",
 			"sonar/cognitive-complexity": "off",
 			"sonar/cyclomatic-complexity": ["off", { threshold: 10 }],
 			"sonar/no-commented-code": "off",
@@ -149,7 +153,6 @@ export default style(
 					accessibility: "explicit",
 				},
 			],
-			// kid named "no operation"
 			"ts/no-empty-function": "off",
 			// sometimes stuff isn't added. this is unhelpful as a result.
 			"ts/no-empty-object-type": "off",
@@ -157,44 +160,32 @@ export default style(
 			"ts/no-non-null-assertion": "off",
 			// LUAU MF
 			"ts/no-require-imports": "off",
-			// always wrong
+			// wrong
 			"ts/no-unnecessary-condition": "off",
-			// worthless lint. always incorrect.
-			"ts/no-unsafe-argument": "off",
-			// worthless lint. always incorrect.
-			"ts/no-unsafe-assignment": "off",
-			// worthless lint. always incorrect.
-			"ts/no-unsafe-call": "off",
-			// worthless lint. always incorrect.
-			"ts/no-unsafe-member-access": "off",
-			// worthless lint. always incorrect.
-			"ts/no-unsafe-return": "off",
-			// "ts/no-unsafe-type-assertion": "error",
-			// this is luau
-			"ts/only-throw-error": "off",
-			// still luau
-			"ts/prefer-promise-reject-errors": "off",
-			// rule conflict
+			// useless
 			"ts/strict-boolean-expressions": "off",
-			// world's most useless rule: does not care if you have a `default:`
-			"ts/switch-exhaustiveness-check": "off",
-			"ts/unbound-method": "off",
-			// no it shouldn't lol
 			"unicorn/catch-error-name": [
 				"error",
 				{
-					name: "error",
+					name: "exception",
 				},
 			],
 			"unicorn/consistent-destructuring": "off",
 			// this is just outright annoying
 			"unicorn/no-keyword-prefix": "off",
-			"unicorn/no-useless-undefined": ["error", { checkArguments: false, checkArrowFunctionBody: false }],
+			// this rule is useless and conflicts
+			"unicorn/no-useless-undefined": "off",
 			// this piece of shit breaks OTHER apis
 			"unicorn/prefer-single-call": "off",
 			// democracy says goodbye!
 			"unicorn/switch-case-braces": "off",
-			"no-throw-literal": "off"
+			"unused-imports/no-unused-vars": [
+				"error",
+				{
+					argsIgnorePattern: "^_",
+					varsIgnorePattern: "(?:^_|log$)",
+				},
+			],
 		},
 		spellCheck: false,
 		stylistic: {
@@ -205,14 +196,28 @@ export default style(
 		},
 		test: true,
 		toml: false,
-		type: "game",
+		type: "package",
 		typescript: {
-			parserOptions: {
-				projectService: true,
-				tsconfigRootDir: import.meta.dirname,
+			overridesTypeAware: {
+				"ts/naming-convention": [
+					"error",
+					{
+						custom: {
+							match: false,
+							regex: "^I[A-Z]",
+						},
+						format: ["PascalCase"],
+						selector: "interface",
+					},
+				],
+				"ts/only-throw-error": [
+					"off",
+					{
+						allow: [],
+					},
+				],
+				"ts/switch-exhaustiveness-check": ["error", { considerDefaultExhaustiveForUnions: true }],
 			},
-			tsconfigPath: "./tsconfig.json",
-			typeAware: true,
 		},
 		yaml: {
 			overrides: {
@@ -228,15 +233,9 @@ export default style(
 		},
 	},
 	{
-		files: ["**/*.d.ts"],
+		files: [GLOB_DTS],
 		rules: {
 			"shopify/prefer-class-properties": "off",
-		},
-	},
-	{
-		files: ["src/**/*.d.ts"],
-		rules: {
-			"unicorn/filename-case": "off",
 		},
 	},
 );

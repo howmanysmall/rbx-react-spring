@@ -2,9 +2,6 @@ import type { Binding } from "@rbxts/react";
 
 type AnimationStyle = Record<string, ReactSpring.AnimatableType>;
 
-type NonStyleKeys = "from" | "to" | keyof ReactSpring.SharedAnimationProperties;
-type StripNonStyle<T> = { [K in keyof T as K extends NonStyleKeys ? never : K]: T[K] };
-
 // biome-ignore lint/complexity/noBannedTypes: exceedingly unhelpful
 type EnforceProperties<P> = (P extends { from?: infer F } ? { from?: AnimationStyle & F } : {}) &
 	// enforce from/to (when present) are AnimationStyle
@@ -16,7 +13,6 @@ type EnforceProperties<P> = (P extends { from?: infer F } ? { from?: AnimationSt
 			? StripNonStyle<P>[K]
 			: never;
 	};
-
 type ExtractStyle<P> = P extends { from?: infer F }
 	? F extends AnimationStyle
 		? F
@@ -30,6 +26,10 @@ type ExtractStyle<P> = P extends { from?: infer F }
 					? K
 					: never]: StripNonStyle<P>[K];
 			};
+
+type NonStyleKeys = "from" | "to" | keyof ReactSpring.SharedAnimationProperties;
+
+type StripNonStyle<T> = { [K in keyof T as K extends NonStyleKeys ? never : K]: T[K] };
 
 /**
  * Function signature interface for the useSpring hook with multiple overloads.
@@ -168,33 +168,6 @@ interface UseTrail {
 
 declare namespace ReactSpring {
 	/**
-	 * A function that defines the progression of an animation over time.
-	 *
-	 * Easing functions control how animations accelerate and decelerate,
-	 * creating different visual effects like smooth transitions, bouncing, or
-	 * elastic movements. They map a linear time progression (0 to 1) to a
-	 * potentially non-linear animation progression.
-	 *
-	 * @example
-	 *
-	 * ```typescript
-	 * // Custom easing function
-	 * const customEasing: EasingFunction = (alpha) => alpha * alpha; // Quadratic ease-in
-	 *
-	 * // Using with animation config
-	 * const styles = useSpring({
-	 * 	to: { transparency: 0 },
-	 * 	config: { easing: customEasing, duration: 1 },
-	 * });
-	 * ```
-	 *
-	 * @param alpha - The linear time progression from 0 (start) to 1 (end).
-	 * @returns The eased progression value, typically between 0 and 1.
-	 * @see {@link https://www.chrisc.dev/roact-spring/docs/Common/configs | Configuration Guide}
-	 */
-	export type EasingFunction = (alpha: number) => number;
-
-	/**
 	 * Union type of all Roblox data types that can be animated by react-spring.
 	 *
 	 * React-spring supports interpolation between values of these types,
@@ -244,73 +217,6 @@ declare namespace ReactSpring {
 		| Vector2int16
 		| Vector3
 		| Vector3int16;
-
-	/**
-	 * Core animation properties that define the start and end states of an
-	 * animation.
-	 *
-	 * This interface provides the fundamental `from` and `to` properties that
-	 * specify where an animation begins and where it should end. These
-	 * properties form the foundation of all spring animations in react-spring.
-	 *
-	 * @example
-	 *
-	 * ```typescript
-	 * // Basic from/to animation
-	 * const fadeIn: AnimationProperties<{ transparency: number }> = {
-	 * 	from: { transparency: 1 },
-	 * 	to: { transparency: 0 },
-	 * };
-	 *
-	 * // Position animation
-	 * const slideIn: AnimationProperties<{ position: UDim2 }> = {
-	 * 	from: { position: UDim2.fromScale(-1, 0) },
-	 * 	to: { position: UDim2.fromScale(0, 0) },
-	 * };
-	 * ```
-	 *
-	 * @template T - The animation style type extending AnimationStyle.
-	 * @see {@link https://www.chrisc.dev/roact-spring/docs/Common/props | Animation Properties Guide}
-	 */
-	export interface AnimationProperties<T extends AnimationStyle> {
-		readonly from?: T;
-		readonly to?: T;
-	}
-
-	/**
-	 * Common animation properties shared across all spring animations.
-	 *
-	 * These properties control the behavior and timing of animations, providing
-	 * fine-grained control over how animations execute, when they start, and
-	 * how they repeat. They can be applied to any animation regardless of the
-	 * specific style properties being animated.
-	 *
-	 * @example
-	 *
-	 * ```typescript
-	 * // Using shared properties
-	 * const styles = useSpring({
-	 * 	to: { transparency: 0 },
-	 * 	config: ReactSpring.config.wobbly, // Spring configuration
-	 * 	delay: 500, // Wait 500ms before starting
-	 * 	immediate: false, // Animate (don't jump)
-	 * 	loop: true, // Repeat animation
-	 * 	reset: true, // Start from initial values
-	 * 	default: true, // Use as default for all props
-	 * });
-	 * ```
-	 *
-	 * @see {@link https://www.chrisc.dev/roact-spring/docs/Common/props | Animation Properties Guide}
-	 * @see {@link https://www.chrisc.dev/roact-spring/docs/Common/configs | Configuration Guide}
-	 */
-	export interface SharedAnimationProperties {
-		readonly config?: AnimationConfiguration;
-		readonly default?: boolean;
-		readonly delay?: number;
-		readonly immediate?: boolean;
-		readonly loop?: boolean;
-		readonly reset?: boolean;
-	}
 
 	/**
 	 * Comprehensive configuration options for customizing spring animation
@@ -452,6 +358,100 @@ declare namespace ReactSpring {
 
 		/** The initial velocity of one or more values. */
 		readonly velocity?: number | ReadonlyArray<number>;
+	}
+
+	/**
+	 * Core animation properties that define the start and end states of an
+	 * animation.
+	 *
+	 * This interface provides the fundamental `from` and `to` properties that
+	 * specify where an animation begins and where it should end. These
+	 * properties form the foundation of all spring animations in react-spring.
+	 *
+	 * @example
+	 *
+	 * ```typescript
+	 * // Basic from/to animation
+	 * const fadeIn: AnimationProperties<{ transparency: number }> = {
+	 * 	from: { transparency: 1 },
+	 * 	to: { transparency: 0 },
+	 * };
+	 *
+	 * // Position animation
+	 * const slideIn: AnimationProperties<{ position: UDim2 }> = {
+	 * 	from: { position: UDim2.fromScale(-1, 0) },
+	 * 	to: { position: UDim2.fromScale(0, 0) },
+	 * };
+	 * ```
+	 *
+	 * @template T - The animation style type extending AnimationStyle.
+	 * @see {@link https://www.chrisc.dev/roact-spring/docs/Common/props | Animation Properties Guide}
+	 */
+	export interface AnimationProperties<T extends AnimationStyle> {
+		readonly from?: T;
+		readonly to?: T;
+	}
+
+	/**
+	 * A function that defines the progression of an animation over time.
+	 *
+	 * Easing functions control how animations accelerate and decelerate,
+	 * creating different visual effects like smooth transitions, bouncing, or
+	 * elastic movements. They map a linear time progression (0 to 1) to a
+	 * potentially non-linear animation progression.
+	 *
+	 * @example
+	 *
+	 * ```typescript
+	 * // Custom easing function
+	 * const customEasing: EasingFunction = (alpha) => alpha * alpha; // Quadratic ease-in
+	 *
+	 * // Using with animation config
+	 * const styles = useSpring({
+	 * 	to: { transparency: 0 },
+	 * 	config: { easing: customEasing, duration: 1 },
+	 * });
+	 * ```
+	 *
+	 * @param alpha - The linear time progression from 0 (start) to 1 (end).
+	 * @returns The eased progression value, typically between 0 and 1.
+	 * @see {@link https://www.chrisc.dev/roact-spring/docs/Common/configs | Configuration Guide}
+	 */
+	export type EasingFunction = (alpha: number) => number;
+
+	/**
+	 * Common animation properties shared across all spring animations.
+	 *
+	 * These properties control the behavior and timing of animations, providing
+	 * fine-grained control over how animations execute, when they start, and
+	 * how they repeat. They can be applied to any animation regardless of the
+	 * specific style properties being animated.
+	 *
+	 * @example
+	 *
+	 * ```typescript
+	 * // Using shared properties
+	 * const styles = useSpring({
+	 * 	to: { transparency: 0 },
+	 * 	config: ReactSpring.config.wobbly, // Spring configuration
+	 * 	delay: 500, // Wait 500ms before starting
+	 * 	immediate: false, // Animate (don't jump)
+	 * 	loop: true, // Repeat animation
+	 * 	reset: true, // Start from initial values
+	 * 	default: true, // Use as default for all props
+	 * });
+	 * ```
+	 *
+	 * @see {@link https://www.chrisc.dev/roact-spring/docs/Common/props | Animation Properties Guide}
+	 * @see {@link https://www.chrisc.dev/roact-spring/docs/Common/configs | Configuration Guide}
+	 */
+	export interface SharedAnimationProperties {
+		readonly config?: AnimationConfiguration;
+		readonly default?: boolean;
+		readonly delay?: number;
+		readonly immediate?: boolean;
+		readonly loop?: boolean;
+		readonly reset?: boolean;
 	}
 
 	/**
@@ -726,6 +726,55 @@ declare namespace ReactSpring {
 	}
 
 	/**
+	 * Imperative API for controlling animations programmatically.
+	 *
+	 * This interface provides methods to start, stop, and pause animations
+	 * without re-rendering components. The API is returned by animation hooks
+	 * and the Controller class, enabling fine-grained control over animation
+	 * timing and behavior.
+	 *
+	 * **Key Features:**.
+	 *
+	 * - Asynchronous operations that return Promises for chaining
+	 * - Selective control over specific animation keys
+	 * - Non-reactive updates that don't trigger re-renders
+	 * - Stable API reference that's safe for dependency arrays.
+	 *
+	 * @example
+	 *
+	 * ```typescript
+	 * const [styles, api] = useSpring(() => ({
+	 * 	transparency: 1,
+	 * 	scale: 1,
+	 * }));
+	 *
+	 * // Start animation with new properties
+	 * api.start({
+	 * 	transparency: 0,
+	 * 	scale: 1.2,
+	 * 	config: { duration: 1000 },
+	 * }).then(() => {
+	 * 	console.log("Animation completed!");
+	 * });
+	 *
+	 * // Control specific properties
+	 * api.pause(["transparency"]); // Pause only transparency
+	 * api.stop(["scale"]); // Stop only scale animation
+	 *
+	 * // Control all animations
+	 * api.pause(); // Pause everything
+	 * api.stop(); // Stop everything
+	 * ```
+	 *
+	 * @see {@link https://www.chrisc.dev/roact-spring/docs/Common/imperatives | Imperative API Guide}
+	 */
+	export interface ControllerApi {
+		pause(this: void, keys?: ReadonlyArray<string>): Promise<void>;
+		start<TStyle extends AnimationStyle>(this: void, startProperties?: ControllerProperties<TStyle>): Promise<void>;
+		stop(this: void, keys?: ReadonlyArray<string>): Promise<void>;
+	}
+
+	/**
 	 * Complete set of properties for configuring spring animations.
 	 *
 	 * This type combines animation targets (`from`/`to` or direct style
@@ -783,55 +832,6 @@ declare namespace ReactSpring {
 	 */
 	export type ControllerProperties<T extends AnimationStyle> = (AnimationProperties<T> | T) &
 		SharedAnimationProperties;
-
-	/**
-	 * Imperative API for controlling animations programmatically.
-	 *
-	 * This interface provides methods to start, stop, and pause animations
-	 * without re-rendering components. The API is returned by animation hooks
-	 * and the Controller class, enabling fine-grained control over animation
-	 * timing and behavior.
-	 *
-	 * **Key Features:**.
-	 *
-	 * - Asynchronous operations that return Promises for chaining
-	 * - Selective control over specific animation keys
-	 * - Non-reactive updates that don't trigger re-renders
-	 * - Stable API reference that's safe for dependency arrays.
-	 *
-	 * @example
-	 *
-	 * ```typescript
-	 * const [styles, api] = useSpring(() => ({
-	 * 	transparency: 1,
-	 * 	scale: 1,
-	 * }));
-	 *
-	 * // Start animation with new properties
-	 * api.start({
-	 * 	transparency: 0,
-	 * 	scale: 1.2,
-	 * 	config: { duration: 1000 },
-	 * }).then(() => {
-	 * 	console.log("Animation completed!");
-	 * });
-	 *
-	 * // Control specific properties
-	 * api.pause(["transparency"]); // Pause only transparency
-	 * api.stop(["scale"]); // Stop only scale animation
-	 *
-	 * // Control all animations
-	 * api.pause(); // Pause everything
-	 * api.stop(); // Stop everything
-	 * ```
-	 *
-	 * @see {@link https://www.chrisc.dev/roact-spring/docs/Common/imperatives | Imperative API Guide}
-	 */
-	export interface ControllerApi {
-		pause(this: void, keys?: ReadonlyArray<string>): Promise<void>;
-		start<TStyle extends AnimationStyle>(this: void, startProperties?: ControllerProperties<TStyle>): Promise<void>;
-		stop(this: void, keys?: ReadonlyArray<string>): Promise<void>;
-	}
 
 	/**
 	 * Class-based animation controller for managing springs in class
